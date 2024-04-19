@@ -1,3 +1,3 @@
-# Explainable Learning Models
+# Explainable Learning Models - Client
 
-This project builds a system that parametrises learning models using a Data-Oriented Architecture. The system offers an interface where users can ask why a given parameter was selected for a lerning model (i.e., explainability). Such question/answering interface relies on LLMs.
+This project builds a client for the Explainable Learning Models system. This system parametrises learning models using a Data-Oriented Architecture. The system also offers a question/answering interface where users can ask about the parametrisation process of the learning model using natural language.
