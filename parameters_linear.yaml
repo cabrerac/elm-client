@@ -1,0 +1,3 @@
+model: linear
+estimator: least_squares
+data_path: ./data/test.csv

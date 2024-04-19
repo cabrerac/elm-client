@@ -137,3 +137,6 @@ logs/
 data/
 .vscode/
 
+# Clients data
+data/
+
