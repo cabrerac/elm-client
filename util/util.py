@@ -1,4 +1,6 @@
 import yaml
+import csv
+from clients import mongo
 
 
 def read_task_config(config_file_name):
@@ -18,3 +20,12 @@ def read_task_config(config_file_name):
         data_path = config_file['data_path']
 
     return model, estimator, data_path
+
+
+def write_task_config(model, estimator, data_path):
+    with open(data_path, newline='') as csvfile:
+        csv_reader = csv.DictReader(csvfile)
+        data = [row for row in csv_reader]
+    task_config = {'model': model, 'estimator': estimator, 'data': data}
+    task_id = mongo.store('elm', 'tasks', task_config)
+    return task_id

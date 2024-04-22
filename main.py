@@ -18,7 +18,7 @@ def main(config_file_name):
     # file log
     if not os.path.exists('./logs/'):
         os.makedirs('./logs/')
-    log_file = './logs/' + config_file_name.replace('.yaml', '_' + datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p") + '.log')
+    log_file = './logs/elm_' + datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p") + '.log'
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(logging.DEBUG)  # set the level for file output
     file_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
@@ -35,15 +35,15 @@ def main(config_file_name):
     # writing task configuration
     step = step + 1
     logger.info(str(step) + '. Writing task configuration...')
-    written = util.write_task_config(model, estimator, data_path)
+    task_id = util.write_task_config(model, estimator, data_path)
 
     # wait for process or exit
-    if written:
+    if task_id is not None:
         step = step + 1
         logger.info(str(step) + '. Waiting for the parameters estimation to finish...')
 
     # process finished
-    logger.info('Process finished...')
+    logger.info('Process finished.')
 
 
 if __name__ == "__main__":
