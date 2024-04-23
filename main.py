@@ -30,12 +30,12 @@ def main(config_file_name):
     # reading task configuration
     step = 1
     logger.info(str(step) + '. Reading task configuration...')
-    model, estimator, data_path = util.read_task_config(config_file_name)
+    model, method, data_path = util.read_task_config(config_file_name)
 
     # writing task configuration
     step = step + 1
     logger.info(str(step) + '. Writing task configuration...')
-    task_id = util.write_task_config(model, estimator, data_path)
+    task_id = util.write_task_config(model, method, data_path)
 
     # wait for process or exit
     if task_id is not None:
