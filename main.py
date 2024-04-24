@@ -5,6 +5,8 @@ from util import util
 import os
 
 
+url = 'http://127.0.0.1:5000/'
+
 def main(config_file_name):
 
     # create and configure logger
@@ -34,8 +36,8 @@ def main(config_file_name):
 
     # writing task configuration
     step = step + 1
-    logger.info(str(step) + '. Writing task configuration...')
-    task_id = util.write_task_config(model, method, data_path)
+    logger.info(str(step) + '. Requesting estimator for task...')
+    task_id = util.submit_task_config(url + 'estimate', model, method, data_path)
 
     # wait for process or exit
     if task_id is not None:
