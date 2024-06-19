@@ -3,12 +3,13 @@ import logging
 from datetime import datetime
 from util import util
 import os
+import pika
 
 
 url = 'http://127.0.0.1:5000/'
 
-def main(config_file_name):
 
+def main(config_file_name):
     # create and configure logger
     logger = logging.getLogger("logger")
     logger.setLevel(logging.DEBUG)
@@ -32,12 +33,12 @@ def main(config_file_name):
     # reading task configuration
     step = 1
     logger.info(str(step) + '. Reading task configuration...')
-    model, method, data_path = util.read_task_config(config_file_name)
+    model, method, data_path, steps = util.read_task_config(config_file_name)
 
     # writing task configuration
     step = step + 1
     logger.info(str(step) + '. Requesting estimator for task...')
-    task_id = util.submit_task_config(url + 'estimate', model, method, data_path)
+    task_id = util.submit_task_config(url + 'learn', model, method, data_path, steps)
 
     # wait for process or exit
     if task_id is not None:

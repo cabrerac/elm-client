@@ -1,3 +1,8 @@
 model: linear
 method: least_squares
+independent_variable: 'x'
+dependent_variable: 'y'
+steps:
+  1: "estimate_slope"
+  2: "estimate_intercept"
 data_path: ./data/test.csv
