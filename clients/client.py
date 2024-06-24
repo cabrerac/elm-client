@@ -12,7 +12,17 @@ file_handler = ''
 logger = logging.getLogger('logger')
 
 
-def request(url, method, data, headers):
+def submit_task_config(url, model, method, steps, metadata, data):
+    task_config = {'model': model, 'method': method, 'steps': steps, 'metadata': metadata, 'data': data}
+    request_response = _request(url, 'post', task_config, {})
+    if request_response.status_code == 200:
+        task_id = json.loads(request_response.content)['task_id']
+    else:
+        task_id = None
+    return task_id
+
+
+def _request(url, method, data, headers):
     global file_handler
     file_handler = logger.handlers[1].baseFilename
     request_result = None

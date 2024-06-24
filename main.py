@@ -2,8 +2,8 @@ import sys
 import logging
 from datetime import datetime
 from util import util
+from clients import client
 import os
-import pika
 
 
 url = 'http://127.0.0.1:5000/'
@@ -33,17 +33,20 @@ def main(config_file_name):
     # reading task configuration
     step = 1
     logger.info(str(step) + '. Reading task configuration...')
-    model, method, data_path, steps = util.read_task_config(config_file_name)
+    model, method, steps, metadata, data_path = util.read_task_config(config_file_name)
 
     # writing task configuration
     step = step + 1
-    logger.info(str(step) + '. Requesting estimator for task...')
-    task_id = util.submit_task_config(url + 'learn', model, method, data_path, steps)
+    logger.info(str(step) + '. Reading data for task...')
+    data = util.read_data(data_path)
+    step = step + 1
+    logger.info(str(step) + '. Requesting learner for task...')
+    task_id = client.submit_task_config(url + 'learn', model, method, steps, metadata, data)
 
     # wait for process or exit
     if task_id is not None:
         step = step + 1
-        logger.info(str(step) + '. Waiting for the parameters estimation to finish...')
+        logger.info(str(step) + '. Waiting for the learning process to finish...')
 
     # process finished
     logger.info('Process finished.')
