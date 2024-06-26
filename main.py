@@ -4,6 +4,7 @@ from datetime import datetime
 from util import util
 from clients import client
 import os
+import time
 
 
 url = 'http://127.0.0.1:5000/'
@@ -41,10 +42,12 @@ def main(config_file_name):
     data = util.read_data(data_path)
     step = step + 1
     logger.info(str(step) + '. Requesting learner for task...')
-    task_id = client.submit_task_config(url + 'learn', model, method, steps, metadata, data)
+    timestamp = int(time.time()*1000)
+    task_id = 'task_' + str(timestamp)
+    res = client.submit_task_config(url + 'learn', task_id, model, method, steps, metadata, data)
 
     # wait for process or exit
-    if task_id is not None:
+    if res == 200:
         step = step + 1
         logger.info(str(step) + '. Waiting for the learning process to finish...')
 

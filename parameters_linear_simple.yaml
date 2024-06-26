@@ -1,0 +1,9 @@
+model: linear
+method: simple
+steps:
+  1: "estimate_slope"
+  2: "estimate_intercept"
+metadata:
+  independent_variable: 'x'
+  dependent_variable: 'y'
+data_path: ./data/test.csv

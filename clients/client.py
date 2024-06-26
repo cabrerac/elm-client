@@ -12,14 +12,11 @@ file_handler = ''
 logger = logging.getLogger('logger')
 
 
-def submit_task_config(url, model, method, steps, metadata, data):
-    task_config = {'model': model, 'method': method, 'steps': steps, 'metadata': metadata, 'data': data}
+def submit_task_config(url, task_id, model, method, steps, metadata, data):
+    task_config = {'task_id': task_id, 'model': model, 'method': method, 'steps': steps, 'metadata': metadata,
+                   'data': data}
     request_response = _request(url, 'post', task_config, {})
-    if request_response.status_code == 200:
-        task_id = json.loads(request_response.content)['task_id']
-    else:
-        task_id = None
-    return task_id
+    return request_response.status_code
 
 
 def _request(url, method, data, headers):
