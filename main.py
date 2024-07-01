@@ -2,7 +2,9 @@ import sys
 import logging
 from datetime import datetime
 from util import util
-from clients import client
+from clients import learner_client
+from clients import llm_client
+from data_manager import mongo
 import os
 import time
 import numpy
@@ -47,25 +49,31 @@ def main(config_file_name):
 
     linear_model = LinearRegression()
     linear_model.fit(numpy.array(data['x']['train']).reshape(-1, 1), numpy.array(data['y']['train']).reshape(-1, 1))
-    print('b1=' + str(linear_model.coef_))
-    print('b0=' + str(linear_model.intercept_))
+    print('slope =' + str(linear_model.coef_[0][0]))
+    print('intercept =' + str(linear_model.intercept_[0]))
     y_pred = linear_model.predict(numpy.array(data['x']['test']).reshape(-1, 1))
-    print('y_pred=' + str(y_pred))
     mse = mean_squared_error(numpy.array(data['y']['test']).reshape(-1, 1), y_pred)
     print('mse=' + str(mse))
     r2 = r2_score(numpy.array(data['y']['test']).reshape(-1, 1), y_pred)
     print('r2=' + str(r2))
     step = step + 1
-    logger.info(str(step) + '. Requesting learner for task...')
+    logger.info(str(step) + '. Requesting learner for learning task...')
     timestamp = int(time.time()*1000)
     task_id = 'task_' + str(timestamp)
-    res = client.submit_task_config(url + 'learn', task_id, model, method, steps, metadata, data)
+    res = learner_client.submit_task_config(url + 'learn', task_id, model, method, steps, metadata, data)
 
     # wait for process or exit
     if res == 200:
+        logger.info('Waiting for the learning process to finish...')
+        while not mongo.check_record('xlm', 'messages',  {'task.task_id': task_id, 'finished': True}):
+            time.sleep(1)
+        logger.info('Learning process finished...')
         step = step + 1
-        logger.info(str(step) + '. Waiting for the learning process to finish...')
-
+        logger.info(str(step) + '. Interaction with the LLM...')
+        context = mongo.retrieve_records('xlm', 'messages',  {'task.task_id': task_id})
+        llm_client.interact(context)
+    else:
+        logger.info('There were a problem with the request: ' + str(res))
     # process finished
     logger.info('Process finished.')
 

@@ -3,9 +3,11 @@ method: simple
 steps:
   1: "estimate_slope"
   2: "estimate_intercept"
-  3: "predict"
-  4: "evaluate_mse"
-  5: "evaluate_r2"
+  3: "estimate_predictions"
+  4: "calculate_residuals"
+  5: "calculate_deviations"
+  6: "evaluate_mse"
+  7: "evaluate_r2"
 metadata:
   independent_variable: 'x'
   dependent_variable: 'y'
